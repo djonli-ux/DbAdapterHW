@@ -1,21 +1,55 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Data.Common;
 
-
-string connectionString = "Server=DESKTOP-TO8EGSF;Database=P01_dump;Trusted_Connection=True;Encrypt=False;"; 
-DataSet ds = new DataSet();
+string connectionString = "Server=DESKTOP-TO8EGSF;Database=P01_dump;Trusted_Connection=True;Encrypt=False;";
 
 
 using SqlConnection conn = new SqlConnection(connectionString);
 try
 {
-	conn.Open();
-    Console.WriteLine("Connection ok...");
+    string selectQuery = "SELECT * FROM users";
+
+    SqlDataAdapter da = new SqlDataAdapter(selectQuery, conn);
+
+    DataSet ds = new DataSet();
+
+    da.Fill(ds);
+
+    foreach (DataTable table in ds.Tables)
+    {
+        Console.WriteLine($"Table: {table.TableName}");
+
+        // Цикл для вывода заголовков столбцов
+        foreach (DataColumn column in table.Columns)
+        {
+            Console.Write($"{column.ColumnName}\t");
+        }
+        Console.WriteLine();
+
+        // Цикл для вывода данных
+        foreach (DataRow row in table.Rows)
+        {
+            foreach (var item in row.ItemArray)
+            {
+                Console.Write($"{item}\t");
+            }
+            Console.WriteLine();
+        }
+
+        Console.WriteLine();
+    }
+
 
 }
-catch (Exception)
+catch (Exception ex)
 {
 
-	throw;
+    Console.WriteLine($"ERROR: {ex.Message}");
+}
+finally 
+{
+    if(conn.State == ConnectionState.Open)
+        conn.Close();
 }
 
