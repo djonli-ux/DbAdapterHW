@@ -1,9 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Data;
 using System.Data.Common;
+using System.Configuration;
 
-string connectionString = "Server=DESKTOP-TO8EGSF;Database=P01_dump;Trusted_Connection=True;Encrypt=False;";
+//string connectionString = "Server=DESKTOP-TO8EGSF;Database=P01_dump;Trusted_Connection=True;Encrypt=False;";
 
+string connectionString = ConfigurationManager.ConnectionStrings["Express"].ConnectionString;
 
 using SqlConnection conn = new SqlConnection(connectionString);
 try
@@ -39,12 +42,9 @@ try
 
         Console.WriteLine();
     }
-
-
 }
 catch (Exception ex)
 {
-
     Console.WriteLine($"ERROR: {ex.Message}");
 }
 finally 
